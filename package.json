@@ -13,6 +13,14 @@
   ],
   "author": "Thomas Ingram",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ravinggenius/conf_conf.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ravinggenius/conf_conf/issues"
+  },
+  "homepage": "https://github.com/ravinggenius/conf_conf",
   "dependencies": {
     "humps": "0.0.1",
     "lodash": "^2.4.1"

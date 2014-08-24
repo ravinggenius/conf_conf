@@ -36,4 +36,18 @@ var ConfConfError = function (message) {
 	this.message = message;
 };
 
+ConfConf.configure = function (rawOrSetup, setup) {
+	var raw;
+
+	if (typeof rawOrSetup === 'function') {
+		raw = process.env;
+		setup = rawOrSetup;
+	} else {
+		raw = rawOrSetup || process.env;
+		setup = setup || defaultFilter;
+	}
+
+	return _.tap(new ConfConf(raw), setup);
+};
+
 module.exports = ConfConf;

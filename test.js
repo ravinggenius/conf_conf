@@ -4,7 +4,8 @@ var ConfConf = require('./index');
 
 describe('ConfConf', function () {
 	var raw = {
-		'FOO_NAME': '42'
+		'FOO_NAME': '42',
+		'BOOLEAN': 'true'
 	};
 
 	describe('.configure()', function () {
@@ -65,6 +66,14 @@ describe('ConfConf', function () {
 				conf.config('other', { default: 'not 42' });
 
 				expect(conf.other).to.equal('not 42');
+			});
+
+			it('restricts accepted values', function () {
+				expect(function () {
+					conf.config('boolean', { enum: [ 'foo', 'bar', 'baz' ] });
+				}).to.throwException(function (e) {
+					expect(e.message).to.equal('Value for `boolean` must be one of foo, bar, baz');
+				});
 			});
 		});
 

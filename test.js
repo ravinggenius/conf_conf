@@ -37,6 +37,30 @@ describe('ConfConf', function () {
 		});
 	});
 
+	describe('.conventional()', function () {
+		var resolve = require('path').resolve;
+
+		it('loads defaults from local JSON', function () {
+			var conf = ConfConf.conventional(resolve('./fixtures/env_local.json'), function (conf) {
+				conf.config('overridden');
+				conf.config('shared');
+				conf.config('specific');
+			});
+
+			expect(conf.overridden).to.equal('bar_dev');
+			expect(conf.shared).to.equal('foo');
+			expect(conf.specific).to.equal('whatever');
+		});
+
+		it('fails gracefully when local JSON doesn\'t exist', function () {
+			var expected = ConfConf.conventional(resolve('./fixtures/fake.json'), function (conf) {
+				conf.config('nodeEnv', { default: 'development' });
+			});
+
+			expect(expected.nodeEnv).to.equal('development');
+		});
+	});
+
 	describe('#config()', function () {
 		var conf;
 

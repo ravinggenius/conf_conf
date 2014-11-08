@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var fs = require('fs');
 var humps = require('humps');
 
 var defaultOptions = {};
@@ -53,6 +54,22 @@ ConfConf.configure = function (rawOrSetup, setup) {
 	}
 
 	return _.tap(new ConfConf(raw), setup);
+};
+
+ConfConf.conventional = function (envLocalPath, setup) {
+	var envLocal;
+
+	if (fs.existsSync(envLocalPath)) {
+	  envLocal = require(envLocalPath);
+	} else {
+	  envLocal = {};
+	}
+
+	var nodeEnv = process.env.NODE_ENV || 'development';
+
+	var raw = _.merge({}, envLocal.common, envLocal[nodeEnv], process.env);
+
+	return ConfConf.configure(raw, setup);
 };
 
 module.exports = ConfConf;

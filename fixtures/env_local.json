@@ -1,0 +1,16 @@
+{
+	"common": {
+		"OVERRIDDEN": "bar",
+		"SHARED": "foo"
+	},
+	"development": {
+		"OVERRIDDEN": "bar_dev",
+		"SPECIFIC": "whatever"
+	},
+	"test": {
+		"OVERRIDDEN": "bar_test"
+	},
+	"production": {
+		"OVERRIDDEN": "bar_prod"
+	}
+}

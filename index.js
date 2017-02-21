@@ -1,6 +1,8 @@
 const fs = require('fs');
 const humps = require('humps');
 
+const _raw = Symbol();
+
 const defaultOptions = {};
 
 const defaultFilter = function (value) {
@@ -8,7 +10,7 @@ const defaultFilter = function (value) {
 };
 
 const ConfConf = function (raw) {
-	this._raw = raw;
+	this[_raw] = raw;
 };
 
 ConfConf.prototype.enum = function (name, optionsOrFilter, filter) {
@@ -26,7 +28,7 @@ ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 	}
 
 	const rawName = options.from || humps.decamelize(name).toUpperCase();
-	const rawValue = this._raw[rawName];
+	const rawValue = this[_raw][rawName];
 
 	if ((rawValue === undefined) && (options.default === undefined)) {
 		throw new ConfConfError('Missing value for `' + name + '`');

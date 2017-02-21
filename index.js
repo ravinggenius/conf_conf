@@ -1,13 +1,13 @@
-var fs = require('fs');
-var humps = require('humps');
+const fs = require('fs');
+const humps = require('humps');
 
-var defaultOptions = {};
+const defaultOptions = {};
 
-var defaultFilter = function (value) {
+const defaultFilter = function (value) {
 	return value;
 };
 
-var ConfConf = function (raw) {
+const ConfConf = function (raw) {
 	this._raw = raw;
 };
 
@@ -15,7 +15,7 @@ ConfConf.prototype.enum = function (name, optionsOrFilter, filter) {
 };
 
 ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
-	var options;
+	let options;
 
 	if (typeof optionsOrFilter === 'function') {
 		options = defaultOptions;
@@ -25,8 +25,8 @@ ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 		filter = filter || defaultFilter;
 	}
 
-	var rawName = options.from || humps.decamelize(name).toUpperCase();
-	var rawValue = this._raw[rawName];
+	const rawName = options.from || humps.decamelize(name).toUpperCase();
+	const rawValue = this._raw[rawName];
 
 	if ((rawValue === undefined) && (options.default === undefined)) {
 		throw new ConfConfError('Missing value for `' + name + '`');
@@ -37,12 +37,12 @@ ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 	}
 };
 
-var ConfConfError = function (message) {
+const ConfConfError = function (message) {
 	this.message = message;
 };
 
 ConfConf.configure = function (rawOrSetup, setup) {
-	var raw;
+	let raw;
 
 	if (typeof rawOrSetup === 'function') {
 		raw = process.env;
@@ -52,13 +52,13 @@ ConfConf.configure = function (rawOrSetup, setup) {
 		setup = setup || defaultFilter;
 	}
 
-	var reply = new ConfConf(raw);
+	const reply = new ConfConf(raw);
 	setup(reply);
 	return reply;
 };
 
 ConfConf.conventional = function (envLocalPath, setup) {
-	var envLocal;
+	let envLocal;
 
 	if (fs.existsSync(envLocalPath)) {
 	  envLocal = require(envLocalPath);
@@ -66,9 +66,9 @@ ConfConf.conventional = function (envLocalPath, setup) {
 	  envLocal = {};
 	}
 
-	var nodeEnv = process.env.NODE_ENV || 'development';
+	const nodeEnv = process.env.NODE_ENV || 'development';
 
-	var raw = Object.assign({}, envLocal.common, envLocal[nodeEnv], process.env);
+	const raw = Object.assign({}, envLocal.common, envLocal[nodeEnv], process.env);
 
 	return ConfConf.configure(raw, setup);
 };

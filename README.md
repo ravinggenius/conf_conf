@@ -9,7 +9,7 @@ Use ConfConf to verify that your application is properly configured, with canoni
 
 ```javascript
 // config.js
-module.exports = ConfConf.configure(process.env, function (conf) {
+module.exports = ConfConf.configure(process.env, (conf) => {
 	// by default `conf.fooBar` will be assigned whatever value `process.env.FOO_BAR` has
 	conf.config('fooBar');
 
@@ -20,15 +20,13 @@ module.exports = ConfConf.configure(process.env, function (conf) {
 	conf.config('nodeEnv', { default: 'development' });
 
 	// baz is now boolean and defaults to false
-	conf.config('baz', { default: 'false' }, function (baz) {
-		return baz === 'true';
-	});
+	conf.config('baz', { default: 'false' }, baz => baz === 'true');
 });
 ```
 
 ```javascript
 // app.js
-var config = require('./config');
+const config = require('./config');
 config.nodeEnv;
 ```
 

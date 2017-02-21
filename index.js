@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var fs = require('fs');
 var humps = require('humps');
 
@@ -53,7 +52,9 @@ ConfConf.configure = function (rawOrSetup, setup) {
 		setup = setup || defaultFilter;
 	}
 
-	return _.tap(new ConfConf(raw), setup);
+	var reply = new ConfConf(raw);
+	setup(reply);
+	return reply;
 };
 
 ConfConf.conventional = function (envLocalPath, setup) {
@@ -67,7 +68,7 @@ ConfConf.conventional = function (envLocalPath, setup) {
 
 	var nodeEnv = process.env.NODE_ENV || 'development';
 
-	var raw = _.merge({}, envLocal.common, envLocal[nodeEnv], process.env);
+	var raw = Object.assign({}, envLocal.common, envLocal[nodeEnv], process.env);
 
 	return ConfConf.configure(raw, setup);
 };

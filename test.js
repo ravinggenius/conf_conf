@@ -47,17 +47,17 @@ describe('ConfConf', function () {
 				conf.config('specific');
 			});
 
-			expect(conf.overridden).to.equal('bar_dev');
+			expect(conf.overridden).to.equal('bar_test');
 			expect(conf.shared).to.equal('foo');
 			expect(conf.specific).to.equal('whatever');
 		});
 
 		it('fails gracefully when local JSON doesn\'t exist', function () {
 			var expected = ConfConf.conventional(resolve('./fixtures/fake.json'), function (conf) {
-				conf.config('nodeEnv', { default: 'development' });
+				conf.config('answer', { default: '42' });
 			});
 
-			expect(expected.nodeEnv).to.equal('development');
+			expect(expected.answer).to.equal('42');
 		});
 	});
 

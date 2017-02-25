@@ -5,9 +5,7 @@ const _raw = Symbol();
 
 const defaultOptions = {};
 
-const identity = function (value) {
-	return value;
-};
+const identity = value => value;
 
 const ConfConfError = function (message) {
 	this.message = message;

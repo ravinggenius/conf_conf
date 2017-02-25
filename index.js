@@ -5,7 +5,7 @@ const _raw = Symbol();
 
 const defaultOptions = {};
 
-const defaultFilter = function (value) {
+const identity = function (value) {
 	return value;
 };
 
@@ -21,7 +21,7 @@ ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 		filter = optionsOrFilter;
 	} else {
 		options = optionsOrFilter || defaultOptions;
-		filter = filter || defaultFilter;
+		filter = filter || identity;
 	}
 
 	const rawName = options.from || humps.decamelize(name).toUpperCase();
@@ -48,7 +48,7 @@ ConfConf.configure = function (rawOrSetup, setup) {
 		setup = rawOrSetup;
 	} else {
 		raw = rawOrSetup || process.env;
-		setup = setup || defaultFilter;
+		setup = setup || identity;
 	}
 
 	const reply = new ConfConf(raw);

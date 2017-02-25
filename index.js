@@ -28,9 +28,9 @@ ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 	const rawValue = this[_raw][rawName];
 
 	if ((rawValue === undefined) && (options.default === undefined)) {
-		throw new ConfConfError('Missing value for `' + name + '`');
-	} else if (options.enum && (options.enum.indexOf(rawValue) === -1)) {
-		throw new ConfConfError('Value for `' + name + '` must be one of ' + options.enum.join(', '));
+		throw new ConfConfError(`Missing value for \`${name}\``);
+	} else if (options.enum && !options.enum.includes(rawValue)) {
+		throw new ConfConfError(`Value for \`${name}\` must be one of ${options.enum.join(', ')}`);
 	} else {
 		this[name] = filter(rawValue || options.default);
 	}

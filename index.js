@@ -1,22 +1,20 @@
-var _ = require('lodash');
-var fs = require('fs');
-var humps = require('humps');
+const fs = require('fs');
+const humps = require('humps');
 
-var defaultOptions = {};
+const _raw = Symbol();
 
-var defaultFilter = function (value) {
+const defaultOptions = {};
+
+const defaultFilter = function (value) {
 	return value;
 };
 
-var ConfConf = function (raw) {
-	this._raw = raw;
-};
-
-ConfConf.prototype.enum = function (name, optionsOrFilter, filter) {
+const ConfConf = function (raw) {
+	this[_raw] = raw;
 };
 
 ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
-	var options;
+	let options;
 
 	if (typeof optionsOrFilter === 'function') {
 		options = defaultOptions;
@@ -26,8 +24,8 @@ ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 		filter = filter || defaultFilter;
 	}
 
-	var rawName = options.from || humps.decamelize(name).toUpperCase();
-	var rawValue = this._raw[rawName];
+	const rawName = options.from || humps.decamelize(name).toUpperCase();
+	const rawValue = this[_raw][rawName];
 
 	if ((rawValue === undefined) && (options.default === undefined)) {
 		throw new ConfConfError('Missing value for `' + name + '`');
@@ -38,12 +36,12 @@ ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 	}
 };
 
-var ConfConfError = function (message) {
+const ConfConfError = function (message) {
 	this.message = message;
 };
 
 ConfConf.configure = function (rawOrSetup, setup) {
-	var raw;
+	let raw;
 
 	if (typeof rawOrSetup === 'function') {
 		raw = process.env;
@@ -53,23 +51,9 @@ ConfConf.configure = function (rawOrSetup, setup) {
 		setup = setup || defaultFilter;
 	}
 
-	return _.tap(new ConfConf(raw), setup);
-};
-
-ConfConf.conventional = function (envLocalPath, setup) {
-	var envLocal;
-
-	if (fs.existsSync(envLocalPath)) {
-	  envLocal = require(envLocalPath);
-	} else {
-	  envLocal = {};
-	}
-
-	var nodeEnv = process.env.NODE_ENV || 'development';
-
-	var raw = _.merge({}, envLocal.common, envLocal[nodeEnv], process.env);
-
-	return ConfConf.configure(raw, setup);
+	const reply = new ConfConf(raw);
+	setup(reply);
+	return reply;
 };
 
 module.exports = ConfConf;

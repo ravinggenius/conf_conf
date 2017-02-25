@@ -4,7 +4,7 @@
   "description": "Enforce configuration options for your app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha test.js"
   },
   "keywords": [
     "config",
@@ -22,8 +22,7 @@
   },
   "homepage": "https://github.com/ravinggenius/conf_conf",
   "dependencies": {
-    "humps": "0.0.1",
-    "lodash": "^2.4.1"
+    "humps": "0.0.1"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",

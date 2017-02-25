@@ -3,6 +3,9 @@
   "version": "0.3.0",
   "description": "Enforce configuration options for your app",
   "main": "index.js",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "scripts": {
     "test": "NODE_ENV=test mocha test.js"
   },

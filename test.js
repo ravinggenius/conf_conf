@@ -37,30 +37,6 @@ describe('ConfConf', () => {
 		});
 	});
 
-	describe('.conventional()', () => {
-		const resolve = require('path').resolve;
-
-		it('loads defaults from local JSON', () => {
-			const conf = ConfConf.conventional(resolve('./fixtures/env_local.json'), (conf) => {
-				conf.config('overridden');
-				conf.config('shared');
-				conf.config('specific');
-			});
-
-			expect(conf.overridden).to.equal('bar_test');
-			expect(conf.shared).to.equal('foo');
-			expect(conf.specific).to.equal('whatever');
-		});
-
-		it('fails gracefully when local JSON doesn\'t exist', () => {
-			const expected = ConfConf.conventional(resolve('./fixtures/fake.json'), (conf) => {
-				conf.config('answer', { default: '42' });
-			});
-
-			expect(expected.answer).to.equal('42');
-		});
-	});
-
 	describe('#config()', () => {
 		let conf;
 

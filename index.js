@@ -59,20 +59,4 @@ ConfConf.configure = function (rawOrSetup, setup) {
 	return reply;
 };
 
-ConfConf.conventional = function (envLocalPath, setup) {
-	let envLocal;
-
-	if (fs.existsSync(envLocalPath)) {
-	  envLocal = require(envLocalPath);
-	} else {
-	  envLocal = {};
-	}
-
-	const nodeEnv = process.env.NODE_ENV || 'development';
-
-	const raw = Object.assign({}, envLocal.common, envLocal[nodeEnv], process.env);
-
-	return ConfConf.configure(raw, setup);
-};
-
 module.exports = ConfConf;

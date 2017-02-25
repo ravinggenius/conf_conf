@@ -1,11 +1,13 @@
+/* global describe, it, beforeEach */
+
 const expect = require('expect.js');
 
 const ConfConf = require('./index');
 
 describe('ConfConf', () => {
 	const raw = {
-		'FOO_NAME': '42',
-		'BOOLEAN': 'true'
+		FOO_NAME: '42',
+		BOOLEAN: 'true'
 	};
 
 	describe('.configure()', () => {

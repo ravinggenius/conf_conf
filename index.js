@@ -1,59 +1,60 @@
-const fs = require('fs');
 const humps = require('humps');
 
-const _raw = Symbol();
+const rawValues = Symbol('raw values');
 
 const defaultOptions = {};
 
-const defaultFilter = function (value) {
-	return value;
-};
-
-const ConfConf = function (raw) {
-	this[_raw] = raw;
-};
-
-ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
-	let options;
-
-	if (typeof optionsOrFilter === 'function') {
-		options = defaultOptions;
-		filter = optionsOrFilter;
-	} else {
-		options = optionsOrFilter || defaultOptions;
-		filter = filter || defaultFilter;
-	}
-
-	const rawName = options.from || humps.decamelize(name).toUpperCase();
-	const rawValue = this[_raw][rawName];
-
-	if ((rawValue === undefined) && (options.default === undefined)) {
-		throw new ConfConfError('Missing value for `' + name + '`');
-	} else if (options.enum && (options.enum.indexOf(rawValue) === -1)) {
-		throw new ConfConfError('Value for `' + name + '` must be one of ' + options.enum.join(', '));
-	} else {
-		this[name] = filter(rawValue || options.default);
-	}
-};
+const identity = value => value;
 
 const ConfConfError = function (message) {
 	this.message = message;
 };
 
-ConfConf.configure = function (rawOrSetup, setup) {
-	let raw;
-
-	if (typeof rawOrSetup === 'function') {
-		raw = process.env;
-		setup = rawOrSetup;
-	} else {
-		raw = rawOrSetup || process.env;
-		setup = setup || defaultFilter;
+const ConfConf = class {
+	constructor(raw) {
+		this[rawValues] = raw;
 	}
 
-	const reply = new ConfConf(raw);
-	setup(reply);
-	return reply;
+	config(name, optionsOrFilter, filter) {
+		let options;
+		let doFilter;
+
+		if (typeof optionsOrFilter === 'function') {
+			options = defaultOptions;
+			doFilter = optionsOrFilter;
+		} else {
+			options = optionsOrFilter || defaultOptions;
+			doFilter = filter || identity;
+		}
+
+		const rawName = options.from || humps.decamelize(name).toUpperCase();
+		const rawValue = this[rawValues][rawName];
+
+		if ((rawValue === undefined) && (options.default === undefined)) {
+			throw new ConfConfError(`Missing value for \`${name}\``);
+		} else if (options.enum && !options.enum.includes(rawValue)) {
+			throw new ConfConfError(`Value for \`${name}\` must be one of ${options.enum.join(', ')}`);
+		} else {
+			this[name] = doFilter(rawValue || options.default);
+		}
+	}
+
+	static configure(rawOrSetup, setup) {
+		let raw;
+		let doSetup;
+
+		if (typeof rawOrSetup === 'function') {
+			raw = process.env;
+			doSetup = rawOrSetup;
+		} else {
+			raw = rawOrSetup || process.env;
+			doSetup = setup || identity;
+		}
+
+		const reply = new ConfConf(raw);
+		doSetup(reply);
+		return reply;
+	}
 };
 
 module.exports = ConfConf;

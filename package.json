@@ -1,10 +1,14 @@
 {
   "name": "conf_conf",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Enforce configuration options for your app",
   "main": "index.js",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "eslint . && NODE_ENV=test mocha index.test.js"
   },
   "keywords": [
     "config",
@@ -22,11 +26,27 @@
   },
   "homepage": "https://github.com/ravinggenius/conf_conf",
   "dependencies": {
-    "humps": "0.0.1",
-    "lodash": "^2.4.1"
+    "humps": "0.0.1"
   },
   "devDependencies": {
+    "eslint": "^3.16.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
     "expect.js": "^0.3.1",
     "mocha": "^1.21.4"
+  },
+  "eslintConfig": {
+    "extends": "airbnb",
+    "rules": {
+      "array-bracket-spacing": [ "error", "always" ],
+      "comma-dangle": [ "error", "never" ],
+      "func-names": [ "warn", "never" ],
+      "indent": [ "error", "tab" ],
+      "no-tabs": [ "off" ],
+      "no-underscore-dangle": [ "warn" ],
+      "quote-props": [ "error", "consistent-as-needed" ]
+    }
   }
 }

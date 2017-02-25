@@ -13,9 +13,6 @@ const ConfConf = function (raw) {
 	this[_raw] = raw;
 };
 
-ConfConf.prototype.enum = function (name, optionsOrFilter, filter) {
-};
-
 ConfConf.prototype.config = function (name, optionsOrFilter, filter) {
 	let options;
 

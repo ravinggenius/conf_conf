@@ -77,6 +77,12 @@ describe('ConfConf', () => {
 					expect(e.message).to.equal('Value for `boolean` must be one of foo, bar, baz');
 				});
 			});
+
+			it('restricts accepted values with a default', () => {
+				conf.config('whatever', { default: 'foo', enum: [ 'foo', 'bar', 'baz' ] });
+
+				expect(conf.whatever).to.equal('foo');
+			});
 		});
 
 		describe('filter', () => {

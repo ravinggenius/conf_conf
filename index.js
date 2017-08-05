@@ -28,15 +28,17 @@ const ConfConf = class {
 		}
 
 		const rawName = options.from || humps.decamelize(name).toUpperCase();
-		const rawValue = this[rawValues][rawName];
+		const rawValue = this[rawValues][rawName] || options.default;
 
-		if ((rawValue === undefined) && (options.default === undefined)) {
+		if (rawValue === undefined) {
 			throw new ConfConfError(`Missing value for \`${name}\``);
-		} else if (options.enum && !options.enum.includes(rawValue)) {
-			throw new ConfConfError(`Value for \`${name}\` must be one of ${options.enum.join(', ')}`);
-		} else {
-			this[name] = doFilter(rawValue || options.default);
 		}
+
+		if (options.enum && !options.enum.includes(rawValue)) {
+			throw new ConfConfError(`Value for \`${name}\` must be one of ${options.enum.join(', ')}`);
+		}
+
+		this[name] = doFilter(rawValue);
 	}
 
 	static configure(rawOrSetup, setup) {

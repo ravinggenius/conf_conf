@@ -65,21 +65,21 @@ describe('ConfConf', () => {
 			});
 
 			it('is not required when given a default', () => {
-				conf.config('other', { default: 'not 42' });
+				conf.config('other', { ifUndefined: 'not 42' });
 
 				expect(conf.other).to.equal('not 42');
 			});
 
 			it('restricts accepted values', () => {
 				expect(() => {
-					conf.config('boolean', { enum: [ 'foo', 'bar', 'baz' ] });
+					conf.config('boolean', { set: [ 'foo', 'bar', 'baz' ] });
 				}).to.throwException((e) => {
 					expect(e.message).to.equal('Value for `boolean` must be one of foo, bar, baz');
 				});
 			});
 
 			it('restricts accepted values with a default', () => {
-				conf.config('whatever', { default: 'foo', enum: [ 'foo', 'bar', 'baz' ] });
+				conf.config('whatever', { ifUndefined: 'foo', set: [ 'foo', 'bar', 'baz' ] });
 
 				expect(conf.whatever).to.equal('foo');
 			});
@@ -100,7 +100,7 @@ describe('ConfConf', () => {
 				conf.config('foo', { from: 'FOO_NAME' }, filter);
 				expect(conf.foo).to.equal(42);
 
-				conf.config('other', { default: '21' }, filter);
+				conf.config('other', { ifUndefined: '21' }, filter);
 				expect(conf.other).to.equal(21);
 			});
 		});

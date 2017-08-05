@@ -28,14 +28,14 @@ const ConfConf = class {
 		}
 
 		const rawName = options.from || humps.decamelize(name).toUpperCase();
-		const rawValue = this[rawValues][rawName] || options.default;
+		const rawValue = this[rawValues][rawName] || options.ifUndefined;
 
 		if (rawValue === undefined) {
 			throw new ConfConfError(`Missing value for \`${name}\``);
 		}
 
-		if (options.enum && !options.enum.includes(rawValue)) {
-			throw new ConfConfError(`Value for \`${name}\` must be one of ${options.enum.join(', ')}`);
+		if (options.set && !options.set.includes(rawValue)) {
+			throw new ConfConfError(`Value for \`${name}\` must be one of ${options.set.join(', ')}`);
 		}
 
 		this[name] = doFilter(rawValue);

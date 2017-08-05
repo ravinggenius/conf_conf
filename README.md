@@ -17,10 +17,10 @@ module.exports = ConfConf.configure(process.env, (conf) => {
 	conf.config('foo', { from: 'FOO_BAR' });
 
 	// registered configs are required unless a default is given
-	conf.config('nodeEnv', { default: 'development' });
+	conf.config('nodeEnv', { ifUndefined: 'development' });
 
 	// baz is now boolean and defaults to false
-	conf.config('baz', { default: 'false' }, baz => baz === 'true');
+	conf.config('baz', { ifUndefined: 'false' }, baz => baz === 'true');
 });
 ```
 
@@ -42,7 +42,7 @@ You can combine with [dotenv](https://www.npmjs.com/package/dotenv) to define va
 require('dotenv').config();
 
 module.exports = ConfConf.configure(process.env, (conf) => {
-	// we don't want a `default` here, as it will be different for every developer
+	// we don't want `ifUndefined` here, as it will be different for every developer
 	conf.config('databaseURL');
 });
 ```

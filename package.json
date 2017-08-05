@@ -4,7 +4,7 @@
   "description": "Enforce configuration options for your app",
   "main": "index.js",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=7.0.0"
   },
   "scripts": {
     "lint": "eslint .",

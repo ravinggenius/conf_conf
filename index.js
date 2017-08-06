@@ -1,8 +1,6 @@
 const humps = require('humps');
 
-const rawValues = Symbol('raw values');
-
-const defaultOptions = {};
+const RAW_VALUES = Symbol('RAW_VALUES');
 
 const identity = value => value;
 
@@ -10,53 +8,47 @@ const ConfConfError = function (message) {
 	this.message = message;
 };
 
-const ConfConf = class {
-	constructor(raw) {
-		this[rawValues] = raw;
-	}
-
-	config(name, optionsOrFilter, filter) {
-		let options;
-		let doFilter;
-
-		if (typeof optionsOrFilter === 'function') {
-			options = defaultOptions;
-			doFilter = optionsOrFilter;
-		} else {
-			options = optionsOrFilter || defaultOptions;
-			doFilter = filter || identity;
-		}
-
-		const rawName = options.from || humps.decamelize(name).toUpperCase();
-		const rawValue = this[rawValues][rawName] || options.ifUndefined;
-
-		if (rawValue === undefined) {
-			throw new ConfConfError(`Missing value for \`${name}\``);
-		}
-
-		if (options.set && !options.set.includes(rawValue)) {
-			throw new ConfConfError(`Value for \`${name}\` must be one of ${options.set.join(', ')}`);
-		}
-
-		this[name] = doFilter(rawValue);
-	}
-
-	static configure(rawOrSetup, setup) {
-		let raw;
-		let doSetup;
-
-		if (typeof rawOrSetup === 'function') {
-			raw = process.env;
-			doSetup = rawOrSetup;
-		} else {
-			raw = rawOrSetup || process.env;
-			doSetup = setup || identity;
-		}
-
-		const reply = new ConfConf(raw);
-		doSetup(reply);
-		return reply;
+const normalize = (optionsOrFilter) => {
+	if (typeof optionsOrFilter === 'function') {
+		return { filter: optionsOrFilter };
+	} else {
+		return optionsOrFilter;
 	}
 };
 
-module.exports = ConfConf;
+const valueFor = raw => (name, {
+	from = humps.decamelize(name).toUpperCase(),
+	filter = identity,
+	ifUndefined,
+	set
+}) => {
+	let reply;
+
+	if (raw[from] !== undefined) {
+		reply = raw[from];
+	} else if (ifUndefined !== undefined) {
+		reply = ifUndefined;
+	} else {
+		throw new ConfConfError(`Missing value for \`${name}\``);
+	}
+
+	if (set && !set.includes(reply)) {
+		throw new ConfConfError(`Value for \`${name}\` must be one of ${set.join(', ')}`);
+	}
+
+	return filter(reply);
+};
+module.exports.valueFor = valueFor;
+
+const configure = (raw, descriptions) => {
+	const base = { [RAW_VALUES]: raw };
+	const v = valueFor(raw);
+
+	return Object.entries(descriptions).map(
+		([ name, options ]) => [ name, normalize(options) ]
+	).reduce(
+		(memo, [ name, options ]) => Object.assign({}, memo, { [name]: v(name, options) }),
+		base
+	);
+};
+module.exports.configure = configure;

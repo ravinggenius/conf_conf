@@ -8,6 +8,7 @@ module.exports = {
 		'comma-dangle': [ 'error', 'never' ],
 		'func-names': [ 'warn', 'never' ],
 		'indent': [ 'error', 'tab' ],
+		'no-else-return': [ 'off' ],
 		'no-tabs': [ 'off' ],
 		'no-underscore-dangle': [ 'warn' ],
 		'quote-props': [ 'error', 'consistent-as-needed' ]

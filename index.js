@@ -1,4 +1,4 @@
-const humps = require('humps');
+const { decamelize } = require('humps');
 
 const RAW_VALUES = Symbol('RAW_VALUES');
 
@@ -17,8 +17,8 @@ const normalize = (optionsOrFilter) => {
 };
 
 const valueFor = raw => (name, {
-	from = humps.decamelize(name).toUpperCase(),
 	filter = identity,
+	from = decamelize(name).toUpperCase(),
 	ifUndefined,
 	set
 }) => {
@@ -47,7 +47,7 @@ const configure = (raw, descriptions) => {
 	return Object.entries(descriptions).map(
 		([ name, options ]) => [ name, normalize(options) ]
 	).reduce(
-		(memo, [ name, options ]) => Object.assign({}, memo, { [name]: v(name, options) }),
+		(memo, [ name, options ]) => ({ ...memo, [name]: v(name, options) }),
 		base
 	);
 };

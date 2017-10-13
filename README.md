@@ -48,12 +48,16 @@ export default configure(process.env, {
 	nodeEnv: { ifUndefined: 'development' },
 
 	// normally environment variables are strings. if you need some other type, use `filter`
-	port: { filter: port => parseInt(port, 10) }
+	port: { filter: port => parseInt(port, 10) },
+
+	// if you only need to specify `filter`, it may be shortened
+	// port: port => parseInt(port, 10),
 
 	// if the value should be taken from a pre-determined list, you can do that too
 	// an error will be thrown if `logLevel` isn't in `set`
-	logLevel: { set: [ 'debug', 'info', 'warn', 'error' ] }
+	logLevel: { set: [ 'debug', 'info', 'warn', 'error' ] },
 
+	// boolean value example
 	minifyAssets: { ifUndefined: 'false', filter: minify => minify === 'true' }
 });
 ```

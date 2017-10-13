@@ -57,6 +57,7 @@ export default configure(process.env, {
 	// an error will be thrown if `logLevel` isn't in `set`
 	logLevel: { set: [ 'debug', 'info', 'warn', 'error' ] },
 
+	// boolean value example
 	minifyAssets: { ifUndefined: 'false', filter: minify => minify === 'true' }
 });
 ```

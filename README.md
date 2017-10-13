@@ -1,11 +1,18 @@
 ## ConfConf
 
-ConfConf is a shameless port of a [Ruby gem](https://rubygems.org/gems/conf_conf) by the same name to Node. It is meant to be used with environment variables, but it also accepts flat raw configuration object.
+ConfConf was inspired by a [Ruby gem](https://rubygems.org/gems/conf_conf) of the same name. It provides a single source of truth for your application's configuration. Configure it in a file (typically `config.js`), and keep awkward `process.env.WHATEVER`s away from the rest of your source code.
+
+Assumptions (see also https://12factor.net/config):
+
+* You store your app's configuration in environment variables
+* You want numbers and booleans to be `number` and `boolean`, *not* `string`
+* You want to *know* your app is fully configured when it boots
+* Configuration should be optimized for **`development`**, with environment overrides for any other runtime
 
 
 ### Usage
 
-Use ConfConf to verify that your application is properly configured, with canonical names and no undefined values. The resulting object is a plain JavaScript object.
+Use ConfConf to verify that your application is properly configured, with canonical names and no `undefined` values. The resulting object is a plain JavaScript object. ConfConf is meant to be used with environment variables, but it also accepts a flat raw configuration object (handy for testing!). A tool like [@std/esm](https://www.npmjs.com/package/@std/esm) is recommended to enable modern module syntax.
 
 ```javascript
 // config.js
@@ -76,7 +83,7 @@ export default {
 
 ### Advanced
 
-You can combine with [dotenv](https://www.npmjs.com/package/dotenv) to define values you don't want in source control.
+You can combine with [dotenv](https://www.npmjs.com/package/dotenv) to define values you don't want to keep in source control.
 
 ```
 # .env
@@ -93,8 +100,8 @@ import { config } from 'dotenv';
 config();
 
 export default configure(process.env, {
-	// we can use `ifUndefined` here, as this value may be different for every developer
-	apiKey: {}
+	// don't use `ifUndefined` here, as this value should be different for each developer
+	databaseUrl: {}
 });
 ```
 

@@ -44,11 +44,9 @@ const configure = (raw, descriptions) => {
 	const base = { [RAW_VALUES]: raw };
 	const v = valueFor(raw);
 
-	return Object.entries(descriptions).map(
-		([ name, options ]) => [ name, normalize(options) ]
-	).reduce(
-		(memo, [ name, options ]) => ({ ...memo, [name]: v(name, options) }),
-		base
-	);
+	return Object.entries(descriptions).reduce((memo, [ name, options ]) => ({
+		...memo,
+		[name]: v(name, normalize(options))
+	}), base);
 };
 module.exports.configure = configure;

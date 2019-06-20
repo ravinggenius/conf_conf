@@ -1,6 +1,6 @@
 {
   "name": "conf_conf",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Enforce configuration options for your app",
   "main": "index.js",
   "engines": {

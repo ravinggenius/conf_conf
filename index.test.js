@@ -77,7 +77,7 @@ describe('ConfConf', () => {
 						whatever: { fallback: undefined }
 					});
 				}).to.throwException((e) => {
-					expect(e.message).to.equal('Missing value for `whatever`');
+					expect(e.message).to.equal('Missing value for `whatever`. Expected `process.env.WHATEVER` to be defined');
 				});
 			});
 		});
@@ -113,7 +113,7 @@ describe('ConfConf', () => {
 						other: {}
 					});
 				}).to.throwException((e) => {
-					expect(e.message).to.equal('Missing value for `other`');
+					expect(e.message).to.equal('Missing value for `other`. Expected `process.env.OTHER` to be defined');
 				});
 			});
 		});

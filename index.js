@@ -65,7 +65,7 @@ const valueFor = raw => (name, {
 	} else if (fallback !== undefined) {
 		reply = fallback;
 	} else {
-		throw new ConfConfError(`Missing value for \`${name}\``);
+		throw new ConfConfError(`Missing value for \`${name}\`. Expected \`process.env.${source}\` to be defined`);
 	}
 
 	if (set && !set.includes(reply)) {

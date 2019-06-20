@@ -4,9 +4,17 @@ const RAW_VALUES = Symbol('RAW_VALUES');
 
 const identity = value => value;
 
-const ConfConfError = function (message) {
-	this.message = message;
-};
+class ConfConfError extends Error {
+	constructor(...etc) {
+		super(...etc);
+
+		if (Error.captureStackTrace) {
+			Error.captureStackTrace(this, ConfConfError);
+		}
+
+		this.name = 'ConfConfError';
+	}
+}
 
 const normalize = (optionsOrFinalize) => {
 	if (typeof optionsOrFinalize === 'function') {

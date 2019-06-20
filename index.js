@@ -44,9 +44,11 @@ const configure = (raw, descriptions) => {
 	const base = { [RAW_VALUES]: raw };
 	const v = valueFor(raw);
 
-	return Object.entries(descriptions).reduce((memo, [ name, options ]) => ({
+	const reply = Object.entries(descriptions).reduce((memo, [ name, options ]) => ({
 		...memo,
 		[name]: v(name, normalize(options))
 	}), base);
+
+	return Object.freeze(reply);
 };
 module.exports.configure = configure;

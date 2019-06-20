@@ -12,7 +12,7 @@ Assumptions (see also https://12factor.net/config):
 
 ### Usage
 
-Use ConfConf to verify that your application is properly configured, with canonical names and no `undefined` values. The resulting object is a plain JavaScript object. ConfConf is meant to be used with environment variables, but it also accepts a flat raw configuration object (handy for testing!). A tool like [@std/esm](https://www.npmjs.com/package/@std/esm) is recommended to enable modern module syntax.
+Use ConfConf to verify that your application is properly configured, with canonical names and no `undefined` values. The resulting object is a frozen JavaScript object. ConfConf is meant to be used with environment variables, but it also accepts a flat raw configuration object (handy for testing!). A tool like [@std/esm](https://www.npmjs.com/package/@std/esm) is recommended to enable modern module syntax.
 
 ```javascript
 // config.js

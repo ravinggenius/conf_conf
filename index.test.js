@@ -29,6 +29,14 @@ describe('ConfConf', () => {
 				expect(config).to.have.property('foo');
 			});
 
+			it('accepts a function for a dynamic value', () => {
+				const config = configure(raw, {
+					foo: { source: env => `${env.FOO_NAME}!!!` }
+				});
+
+				expect(config).to.have.property('foo', '42!!!');
+			});
+
 			it('is not required when given a default', () => {
 				const config = configure(raw, {
 					other: { fallback: 'not 42' }

@@ -42,6 +42,11 @@ export default configure(process.env, {
 	// rename env keys if you like
 	foo: { source: 'FOO_BAR' },
 
+	// set a dynamic value
+	// `env` is whatever you pass to `configure`
+	// the return value will still be verified against `set` and passed through `finalize`, so keep that in mind if you don't return a string
+	isDev: { source: env => env.NODE_ENV !== 'production' },
+
 	// all values are required to be NOT `undefined`
 	// provide a reasonable default for development with `fallback`
 	// if no default value is appropriate for development, use `.env-*` files (see Advanced)

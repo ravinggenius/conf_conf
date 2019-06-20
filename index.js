@@ -26,6 +26,11 @@ const configBoolean = fallback => ({
 });
 module.exports.configBoolean = configBoolean;
 
+const configDynamic = source => ({
+	source
+});
+module.exports.configDynamic = configDynamic;
+
 const configInteger = fallback => ({
 	fallback,
 	finalize: value => Number.parseInt(value, 10)
@@ -45,7 +50,9 @@ const valueFor = raw => (name, {
 }) => {
 	let reply;
 
-	if (raw[source] !== undefined) {
+	if (typeof source === 'function') {
+		reply = source(raw);
+	} else if (raw[source] !== undefined) {
 		reply = raw[source];
 	} else if (fallback !== undefined) {
 		reply = fallback;

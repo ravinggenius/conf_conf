@@ -16,6 +16,27 @@ const normalize = (optionsOrFilter) => {
 	}
 };
 
+const configBoolean = ifUndefined => ({
+	filter: value => value === 'true',
+	ifUndefined,
+	set: [
+		'true',
+		'false'
+	]
+});
+module.exports.configBoolean = configBoolean;
+
+const configInteger = ifUndefined => ({
+	filter: value => Number.parseInt(value, 10),
+	ifUndefined
+});
+module.exports.configInteger = configInteger;
+
+const configString = ifUndefined => ({
+	ifUndefined
+});
+module.exports.configString = configString;
+
 const valueFor = raw => (name, {
 	filter = identity,
 	from = decamelize(name).toUpperCase(),

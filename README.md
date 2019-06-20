@@ -79,7 +79,8 @@ export default configure(process.env, {
 
 	cookieSecret: configString('replace for production'),
 
-	hashStrength: configInteger('12'),
+	hashStrength: configInteger('12')
+});
 ```
 
 ---

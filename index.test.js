@@ -23,15 +23,23 @@ describe('ConfConf', () => {
 		describe('options', () => {
 			it('allows renaming the raw name', () => {
 				const config = configure(raw, {
-					foo: { from: 'FOO_NAME' }
+					foo: { source: 'FOO_NAME' }
 				});
 
 				expect(config).to.have.property('foo');
 			});
 
+			it('accepts a function for a dynamic value', () => {
+				const config = configure(raw, {
+					foo: { source: env => `${env.FOO_NAME}!!!` }
+				});
+
+				expect(config).to.have.property('foo', '42!!!');
+			});
+
 			it('is not required when given a default', () => {
 				const config = configure(raw, {
-					other: { ifUndefined: 'not 42' }
+					other: { fallback: 'not 42' }
 				});
 
 				expect(config.other).to.equal('not 42');
@@ -49,7 +57,7 @@ describe('ConfConf', () => {
 
 			it('restricts accepted values with a default', () => {
 				const config = configure(raw, {
-					whatever: { ifUndefined: 'foo', set: [ 'foo', 'bar', 'baz' ] }
+					whatever: { fallback: 'foo', set: [ 'foo', 'bar', 'baz' ] }
 				});
 
 				expect(config.whatever).to.equal('foo');
@@ -57,7 +65,7 @@ describe('ConfConf', () => {
 
 			it('allows any value', () => {
 				const config = configure(raw, {
-					whatever: { ifUndefined: null }
+					whatever: { fallback: null }
 				});
 
 				expect(config.whatever).to.equal(null);
@@ -66,15 +74,15 @@ describe('ConfConf', () => {
 			it('allows any value except undefined', () => {
 				expect(() => {
 					configure(raw, {
-						whatever: { ifUndefined: undefined }
+						whatever: { fallback: undefined }
 					});
 				}).to.throwException((e) => {
-					expect(e.message).to.equal('Missing value for `whatever`');
+					expect(e.message).to.equal('Missing value for `whatever`. Expected `process.env.WHATEVER` to be defined');
 				});
 			});
 		});
 
-		describe('filter', () => {
+		describe('finalize', () => {
 			it('passes the value through a function before assigning', () => {
 				const config = configure(raw, {
 					fooName: value => parseInt(value, 10) * 2
@@ -84,13 +92,13 @@ describe('ConfConf', () => {
 			});
 		});
 
-		describe('options and filter', () => {
-			const filter = value => parseInt(value, 10);
+		describe('options and finalize', () => {
+			const finalize = value => parseInt(value, 10);
 
-			it('respects options before passing through the filter', () => {
+			it('respects options before passing through the finalize', () => {
 				const config = configure(raw, {
-					foo: { filter, from: 'FOO_NAME' },
-					other: { filter, ifUndefined: '21' }
+					foo: { finalize, source: 'FOO_NAME' },
+					other: { fallback: '21', finalize }
 				});
 
 				expect(config.foo).to.equal(42);
@@ -105,7 +113,7 @@ describe('ConfConf', () => {
 						other: {}
 					});
 				}).to.throwException((e) => {
-					expect(e.message).to.equal('Missing value for `other`');
+					expect(e.message).to.equal('Missing value for `other`. Expected `process.env.OTHER` to be defined');
 				});
 			});
 		});
@@ -121,7 +129,7 @@ describe('ConfConf', () => {
 
 		it('ignores invalid name when using `from`', () => {
 			const v = valueFor(raw);
-			const value = v(null, { from: 'FOO_NAME' });
+			const value = v(null, { source: 'FOO_NAME' });
 
 			expect(value).to.equal('42');
 		});

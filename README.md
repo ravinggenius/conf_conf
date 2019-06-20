@@ -21,7 +21,7 @@ import { configure } from 'conf_conf';
 
 export default configure(process.env, {
 	databaseUrl: {},
-	nodeEnv: { ifUndefined: 'development' }
+	nodeEnv: { fallback: 'development' }
 });
 ```
 
@@ -40,17 +40,17 @@ export default configure(process.env, {
 	fooBar: {},
 
 	// rename env keys if you like
-	foo: { from: 'FOO_BAR' },
+	foo: { source: 'FOO_BAR' },
 
 	// all values are required to be NOT `undefined`
-	// provide a reasonable default for development with `ifUndefined`
+	// provide a reasonable default for development with `fallback`
 	// if no default value is appropriate for development, use `.env-*` files (see Advanced)
-	nodeEnv: { ifUndefined: 'development' },
+	nodeEnv: { fallback: 'development' },
 
-	// normally environment variables are strings. if you need some other type, use `filter`
-	port: { filter: port => parseInt(port, 10) },
+	// normally environment variables are strings. if you need some other type, use `finalize`
+	port: { finalize: port => parseInt(port, 10) },
 
-	// if you only need to specify `filter`, it may be shortened
+	// if you only need to specify `finalize`, it may be shortened
 	// port: port => parseInt(port, 10),
 
 	// if the value should be taken from a pre-determined list, you can do that too
@@ -58,7 +58,7 @@ export default configure(process.env, {
 	logLevel: { set: [ 'debug', 'info', 'warn', 'error' ] },
 
 	// boolean value example
-	minifyAssets: { ifUndefined: 'false', filter: minify => minify === 'true' }
+	minifyAssets: { fallback: 'false', finalize: minify => minify === 'true' }
 });
 ```
 
@@ -75,12 +75,12 @@ const v = valueFor(process.env);
 
 export default {
 	database: {
-		host: v('host', { from: 'DB_HOST', ifUndefined: 'localhost' }),
-		username: v('username', { from: 'DB_USER' }),
-		password: v('password', { from: 'DB_PASSWORD' }),
-		name: v('name', { from: 'DB_DATABASE', ifUndefined: 'foo_development' }),
+		host: v('host', { source: 'DB_HOST', fallback: 'localhost' }),
+		username: v('username', { source: 'DB_USER' }),
+		password: v('password', { source: 'DB_PASSWORD' }),
+		name: v('name', { source: 'DB_DATABASE', fallback: 'foo_development' }),
 	},
-	nodeEnv: v('nodeEnv', { ifUndefined: 'development' })
+	nodeEnv: v('nodeEnv', { fallback: 'development' })
 }
 ```
 
@@ -104,7 +104,7 @@ import { config } from 'dotenv';
 config();
 
 export default configure(process.env, {
-	// don't use `ifUndefined` here, as this value should be different for each developer
+	// don't use `fallback` here, as this value should be different for each developer
 	databaseUrl: {}
 });
 ```

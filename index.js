@@ -8,17 +8,17 @@ const ConfConfError = function (message) {
 	this.message = message;
 };
 
-const normalize = (optionsOrFilter) => {
-	if (typeof optionsOrFilter === 'function') {
-		return { filter: optionsOrFilter };
+const normalize = (optionsOrFinalize) => {
+	if (typeof optionsOrFinalize === 'function') {
+		return { finalize: optionsOrFinalize };
 	} else {
-		return optionsOrFilter;
+		return optionsOrFinalize;
 	}
 };
 
-const configBoolean = ifUndefined => ({
-	filter: value => value === 'true',
-	ifUndefined,
+const configBoolean = fallback => ({
+	fallback,
+	finalize: value => value === 'true',
 	set: [
 		'true',
 		'false'
@@ -26,29 +26,29 @@ const configBoolean = ifUndefined => ({
 });
 module.exports.configBoolean = configBoolean;
 
-const configInteger = ifUndefined => ({
-	filter: value => Number.parseInt(value, 10),
-	ifUndefined
+const configInteger = fallback => ({
+	fallback,
+	finalize: value => Number.parseInt(value, 10)
 });
 module.exports.configInteger = configInteger;
 
-const configString = ifUndefined => ({
-	ifUndefined
+const configString = fallback => ({
+	fallback
 });
 module.exports.configString = configString;
 
 const valueFor = raw => (name, {
-	filter = identity,
-	from = decamelize(name).toUpperCase(),
-	ifUndefined,
-	set
+	fallback,
+	finalize = identity,
+	set,
+	source = decamelize(name).toUpperCase()
 }) => {
 	let reply;
 
-	if (raw[from] !== undefined) {
-		reply = raw[from];
-	} else if (ifUndefined !== undefined) {
-		reply = ifUndefined;
+	if (raw[source] !== undefined) {
+		reply = raw[source];
+	} else if (fallback !== undefined) {
+		reply = fallback;
 	} else {
 		throw new ConfConfError(`Missing value for \`${name}\``);
 	}
@@ -57,7 +57,7 @@ const valueFor = raw => (name, {
 		throw new ConfConfError(`Value for \`${name}\` must be one of ${set.join(', ')}`);
 	}
 
-	return filter(reply);
+	return finalize(reply);
 };
 module.exports.valueFor = valueFor;
 
